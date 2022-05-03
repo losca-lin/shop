@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <!--开启日志-->
+    <settings>
+        <setting name="logImpl" value="STDOUT_LOGGING"/>
+    </settings>
+    <!--给别名，方便简写-->
+    <typeAliases>
+        <package name="com.tjnu.shop.bean"/>
+    </typeAliases>
+    <!--    分页插件配置-->
+    <plugins>
+        <plugin interceptor="com.github.pagehelper.PageInterceptor">
+            <!--合理化配置，数据超了显示最后一页或者第一页-->
+            <property name="reasonable" value="true"/>
+        </plugin>
+    </plugins>
+</configuration>

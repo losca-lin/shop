@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE  mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tjnu.shop.mapper.OrderMapper">
+    <resultMap id="BaseResultMap" type="Order">
+        <id column="id" property="id"/>
+        <result column="order_no" property="orderNo"/>
+        <result column="user_id" property="userId"/>
+        <result column="payment" property="payment"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <resultMap id="UserOrder" type="Order">
+        <id column="tid" property="id"/>
+        <result column="order_no" property="orderNo"/>
+        <result column="user_id" property="userId"/>
+        <result column="payment" property="payment"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <association property="user" javaType="User">
+            <id property="id" column="uid"></id>
+            <result property="username" column="username"/>
+
+        </association>
+    </resultMap>
+
+    <select id="listAllInUsername" resultMap="UserOrder">
+        select t.id tid
+             , t.order_no
+             , t.user_id
+             , t.payment
+             , t.create_time
+             , t.update_time ,u.id uid,u.username
+               from my_order t,umt_user u where t.user_id = u.id
+    </select>
+
+    <!-- 表字段 -->
+    <sql id="baseColumns">
+        t.id
+        , t.order_no
+        , t.user_id
+        , t.payment
+        , t.create_time
+        , t.update_time
+    </sql>
+
+    <!-- 查询全部 -->
+    <select id="listAll" resultMap="BaseResultMap">
+        SELECT
+        <include refid="baseColumns"/>
+
+        FROM my_order t
+    </select>
+
+    <!-- 根据主键获取单条记录 -->
+    <select id="getById" resultMap="BaseResultMap" parameterType="Integer">
+        SELECT
+        <include refid="baseColumns"/>
+        FROM my_order t
+        WHERE id = #{id}
+    </select>
+
+
+    <!-- 更新,更新全部字段 -->
+    <update id="update">
+        UPDATE my_order
+        <set>
+            id=#{id},
+            order_no=#{orderNo},
+            user_id=#{userId},
+            payment=#{payment},
+            create_time=#{createTime},
+            update_time=#{updateTime},
+        </set>
+        WHERE id = #{id}
+    </update>
+
+
+
+
+    <!-- 根据主键删除记录 -->
+    <delete id="delOrder">
+        delete from my_order where id in
+        <foreach collection="array" open="(" separator="," close=")" item="id">
+            #{id}
+        </foreach>
+    </delete>
+
+    <update id="addOrder">
+        INSERT INTO `shop001`.`my_order` (`order_no`, `user_id`, `payment`, `create_time`) VALUES (#{orderNo}, #{userId}, #{payment}, #{createTime})
+    </update>
+
+</mapper>
